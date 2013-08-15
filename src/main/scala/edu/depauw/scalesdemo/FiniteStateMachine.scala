@@ -24,7 +24,7 @@ object FiniteStateMachine extends ScalesApp(600,600) {
   
   // create the graphics for the buttons
   val buttons =
-    btnNames.foldLeft(Phantom: Graphic)((c,name) => c -|| createButton(name).padLeft(40)).topLeft
+    btnNames.foldLeft(Blank(): Graphic)((c,name) => c -|| createButton(name).padLeft(40)).topLeft
   			
   // a map from ShapeStates to state names
   val stateToName = Map((ShapeState.RED_CIRCLE , "Red Circle" ),
@@ -80,7 +80,7 @@ object FiniteStateMachine extends ScalesApp(600,600) {
   def scaleBounds(g:Graphic, scale: Double) = {
     val w = g.bounds.getWidth
     val h = g.bounds.getHeight
-    g.changeBounds(w * scale, h * scale, w * (1-scale) / 2, h * (1-scale) / 2)
+    g.changeBounds(w * scale, h * scale, w * (1-scale) / 4, h * (1-scale) / 4) // TODO why 4 instead of 2?
   }
   
   /**
