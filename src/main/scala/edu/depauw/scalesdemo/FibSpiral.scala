@@ -16,7 +16,7 @@ object FibSpiral extends ScalesApp(640, 480, RenderMode.FIT_MAX, "Fibonacci Spir
 
   val panel = GraphicPanel(fibRect(15))
   
-  panel.getGraphic.writePNG("/tmp/FibSpiral.png")
+  // panel.getGraphic.writePNG("/tmp/FibSpiral.png")
   
   // add panel to window
   addPanel(panel)
