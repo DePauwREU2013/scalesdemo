@@ -14,8 +14,10 @@ object FibSpiral extends ScalesApp(640, 480, RenderMode.FIT_MAX, "Fibonacci Spir
       r.topLeft ||| (Square(h) -& Path((0, 0) -? (h, h) -% (90 deg)))
   }
 
-  val panel = GraphicPanel(fibRect(35))
-
+  val panel = GraphicPanel(fibRect(15))
+  
+  panel.getGraphic.writePNG("/tmp/FibSpiral.png")
+  
   // add panel to window
   addPanel(panel)
 }

@@ -78,9 +78,9 @@ object FiniteStateMachine extends ScalesApp(600,600) {
    * bounding box correspond with actual points on the circle.
    */
   def scaleBounds(g:Graphic, scale: Double) = {
-    val w = g.bounds.getWidth
-    val h = g.bounds.getHeight
-    g.changeBounds(w * scale, h * scale, w * (1-scale) / 4, h * (1-scale) / 4) // TODO why 4 instead of 2?
+    val w = g.width
+    val h = g.height
+    g.changeBounds(w * scale, h * scale, -w * (1-scale) / 2, -h * (1-scale) / 2)
   }
   
   /**
