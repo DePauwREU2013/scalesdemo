@@ -4,22 +4,44 @@ import edu.depauw.scales.ScalesApp
 import edu.depauw.scales.graphics._
 import edu.depauw.scales.reactive._
 
+import java.awt.Color
 import java.awt.geom.AffineTransform
 import java.awt.event.MouseEvent
 
-object Telephone extends ScalesApp(600, 600) {
-  val buttons = ((button("1") -|| button("2")) -^
-                 (button("3") -|| button("4")) -^
-                 button("Flash", 200)
+object Telephone extends ScalesApp(500, 600) {
+  val buttons = ((button("1", Colors.Orange) -|| button("2", Colors.Green)) -^
+                 (button("3", Colors.Yellow) -|| button("4", Colors.Purple)) -^
+                 button("Flash", Colors.Red, 240)
                 ) -||
-                (button("Police") -^ button("Taxi") -^ button("Doctor"))
+                (button("Police", Colors.Red) -^
+                    button("Taxi", Colors.Blue) -^
+                    button("Doctor", Colors.Yellow))
   
-  def button(name: String, width: Int = 100, height: Int = 100): Graphic =
-    (Name(name, Rectangle(width, height).pad(20).center) -& Text(name, FontSize(28)).center).topLeft
+  def button(name: String, color: Color, width: Int = 100, height: Int = 100): Graphic =
+    (Text(name, FontSize(28)).center -& Name(name, Rectangle(width, height).pad(20).center -* color)).topLeft
   
   val buttonNames = buttons.names
   
   type State = String
+  
+  def render: State => Graphic = {
+    case state => buttons -^ Text(state, FontSize(48)).pad(40)
+  }
+  
+  def onMouse: (MouseEvent, State) => State = {
+    case (e, state) if e.getID == MouseEvent.MOUSE_CLICKED =>
+      buttonNames.find(buttons.withName(_).head.shape.contains(e.getX, e.getY)) match {
+        case Some(name) => transitions((state, name))
+        
+        case None => state // not on a button; ignore
+      }
+    
+    case (_, state) => state // not a mouse click; ignore
+  }
+  
+  val panel = ReactivePanel(0, new AffineTransform, "start", render, onMouse)
+  
+  addPanel(panel)
   
   val transitions: Map[(State, String), State] = Map(
       ("start", "1") -> "one", ("start", "2") -> "two", ("start", "3") -> "three", ("start", "4") -> "four",
@@ -79,23 +101,4 @@ object Telephone extends ScalesApp(600, 600) {
       ("hello", "1") -> "circle", ("hello", "2") -> "heart", ("hello", "3") -> "triangle", ("hello", "4") -> "square",
       ("hello", "Flash") -> "talk", ("hello", "Police") -> "police", ("hello", "Taxi") -> "taxi", ("hello", "Doctor") -> "doctor"
     )
-  
-  val panel = ReactivePanel(0, new AffineTransform, "start", render, onMouse)
-  
-  addPanel(panel)
-  
-  def render: State => Graphic = {
-    case state => buttons -^ Text(state, FontSize(28)).pad(40)
-  }
-  
-  def onMouse: (MouseEvent, State) => State = {
-    case (e, state) if e.getID == MouseEvent.MOUSE_CLICKED =>
-      buttonNames.find(buttons.withName(_).head.shape.contains(e.getX, e.getY)) match {
-        case Some(name) => transitions((state, name))
-        
-        case None => state // not on a button; ignore
-      }
-    
-    case (_, state) => state // not a mouse click; ignore
-  }
 }
